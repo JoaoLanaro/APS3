@@ -60,4 +60,23 @@ public class DaoJogador{
 		}
 	}
 
+	public Jogador searchJogadorPorNome(List<Jogador> jogadores, String nome) {
+    for (Jogador j : jogadores) {
+        if (j.getNome().equalsIgnoreCase(nome)) {
+            return j;
+        }
+    }
+    return null;
+	}
+
+	public List<Jogador> searchJogadoresPorTime(List<Jogador> jogadores, String nomeTime) {
+    List<Jogador> resultado = new ArrayList<>();
+    for (Jogador j : jogadores) {
+        if (j.getTime().getNome().equalsIgnoreCase(nomeTime)) {
+            resultado.add(j);
+        }
+    }
+    return resultado;
+	}
+
 }
