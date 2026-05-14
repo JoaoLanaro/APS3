@@ -51,5 +51,15 @@ public class DaoTime {
 			e.printStackTrace();
 		}
 	}
+
+
+	public Time searchTime(List<Time> times, String nome) {
+    for (Time t : times) {
+        if (t.getNome().equalsIgnoreCase(nome)) {
+            return t;
+        }
+    }
+    return null; 
+}
     
 }
