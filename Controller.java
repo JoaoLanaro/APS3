@@ -1,10 +1,11 @@
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import java.util.Scanner;
 
 public class Controller{
     
-        private enum Opcoes {MOSTRAR_JOGADORES, LE_JOGADORES, MOSTRAR_TIMES, LE_TIMES, SAIR}
+        private enum Opcoes {MOSTRAR_JOGADORES, LE_JOGADORES, MOSTRAR_TIMES, LE_TIMES, BUSCAR_JOGADOR_POR_NOME, BUSCAR_JOGADORES_POR_TIME, BUSCAR_TIME, SAIR}
         static final String PATH_JOGADORES = "files/jogadores.csv";
     	static final String PATH_TIMES = "files/times.csv";
         ViewJogador viewJogador = new ViewJogador();
@@ -40,6 +41,35 @@ public class Controller{
 				times.add(time);
 				daoTime.saveTimes(PATH_TIMES, times);
 				break;
+			case BUSCAR_JOGADOR_POR_NOME:
+				System.out.println("Digite o nome do jogador: ");
+				String nomeJogador = new Scanner(System.in, StandardCharsets.UTF_8).nextLine();
+				jogadores = daoJogador.loadJogadores(PATH_JOGADORES, times);
+				Jogador encontrado = daoJogador.searchJogadorPorNome(jogadores, nomeJogador);
+				if (encontrado != null)
+					System.out.println(encontrado);
+				else
+					System.out.println("Jogador não encontrado.");
+				break;
+			case BUSCAR_JOGADORES_POR_TIME:
+				System.out.println("Digite o nome do time: ");
+				String nomeTimeBusca = new Scanner(System.in, StandardCharsets.UTF_8).nextLine();
+				jogadores = daoJogador.loadJogadores(PATH_JOGADORES, times);
+				List<Jogador> doTime = daoJogador.searchJogadoresPorTime(jogadores, nomeTimeBusca);
+				if (!doTime.isEmpty())
+					viewJogador.mostraJogadores(doTime);
+				else
+					System.out.println("Nenhum jogador encontrado para esse time.");
+				break;
+			case BUSCAR_TIME:
+				System.out.println("Digite o nome do time: ");
+				String nomeTimeProcurado = new Scanner(System.in, StandardCharsets.UTF_8).nextLine();
+				Time timeEncontrado = daoTime.searchTime(times, nomeTimeProcurado);
+				if (timeEncontrado != null)
+					System.out.println(timeEncontrado);
+				else
+					System.out.println("Time não encontrado.");
+				break;
 			case SAIR:
 				break;
 			default:
@@ -55,9 +85,12 @@ public class Controller{
 		System.out.println("2 - para entrar com um novo Jogador");
 		System.out.println("3 - Para mostrar times");
 		System.out.println("4 - para entrar com um novo Time");
+		System.out.println("5 - Buscar jogador pelo nome");
+		System.out.println("6 - Buscar jogadores de um time");
+		System.out.println("7 - Buscar time pelo nome");
 		System.out.println("0 - para sair");
 		
-		Scanner in = new Scanner(System.in);
+		Scanner in = new Scanner(System.in, StandardCharsets.UTF_8);
 		String opcaoPalavra = in.nextLine();
 		int opcaoInt = -1;
 		try {
@@ -71,6 +104,12 @@ public class Controller{
 				return Opcoes.MOSTRAR_TIMES;
 			case 4:
 				return Opcoes.LE_TIMES;
+			case 5: 
+				return Opcoes.BUSCAR_JOGADOR_POR_NOME;
+			case 6: 
+				return Opcoes.BUSCAR_JOGADORES_POR_TIME;
+			case 7: 
+				return Opcoes.BUSCAR_TIME;
 			case 0:
 				return Opcoes.SAIR;
 			default:
